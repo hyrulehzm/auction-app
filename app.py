@@ -43,7 +43,7 @@ def login():
         if username in users and users[username] == password:
             st.session_state.username = username
             st.success(f"欢迎回来，{username}！")
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("用户名或密码错误。")
 
@@ -64,7 +64,7 @@ def add_item():
         if not name.strip() or not description.strip():
             st.error("❗ 拍品名称和描述不能为空")
             return
-        
+
     if st.button("✅ 提交拍品"):
         start_dt = datetime.combine(start_date, start_time).isoformat()
         end_dt = datetime.combine(end_date, end_time).isoformat()
@@ -105,13 +105,13 @@ def edit_items():
             if st.button("💾 保存修改", key=f"save_{item['id']}"):
                 save_json(ITEMS_FILE, items)
                 st.success("保存成功！")
-                st.experimental_rerun()
+                st.rerun()
 
             if st.button("🗑️ 删除该拍品", key=f"del_{item['id']}"):
                 items.remove(item)
                 save_json(ITEMS_FILE, items)
                 st.warning("拍品已删除")
-                st.experimental_rerun()
+                st.rerun()
 
 # ====== 拍品竞价 ======
 def bidding_area():
@@ -158,7 +158,7 @@ def bidding_area():
                     item['bids'].append({"user": st.session_state.username, "time": datetime.now().isoformat()})
                     save_json(ITEMS_FILE, items)
                     st.success("出价成功！")
-                    st.experimental_rerun()
+                    st.rerun()
 
             if item['bids']:
                 st.markdown("📜 出价记录：")
@@ -177,7 +177,7 @@ def main():
     st.sidebar.markdown(f"👤 当前用户：`{st.session_state.username}`")
     if st.sidebar.button("🔒 退出登录"):
         del st.session_state.username
-        st.experimental_rerun()
+        st.rerun()
 
     if st.session_state.username == "admin":
         st.title("🖥️ 管理员后台")
