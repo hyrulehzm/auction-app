@@ -61,6 +61,11 @@ def add_item():
     image = st.file_uploader("上传拍品图片", type=["jpg", "jpeg", "png"])
 
     if st.button("✅ 提交拍品"):
+        if not name.strip() or not description.strip():
+            st.error("❗ 拍品名称和描述不能为空")
+            return
+        
+    if st.button("✅ 提交拍品"):
         start_dt = datetime.combine(start_date, start_time).isoformat()
         end_dt = datetime.combine(end_date, end_time).isoformat()
         image_path = None
@@ -116,6 +121,12 @@ def bidding_area():
     items = load_json(ITEMS_FILE)
     for item in items:
         now = datetime.now()
+
+        # 新增：防止时间字段缺失导致崩溃
+        if not item.get("start_time") or not item.get("end_time"):
+            st.warning(f"⚠️ 拍品 `{item['name']}` 缺少时间信息，已跳过展示。")
+            continue
+
         start = datetime.fromisoformat(item['start_time'])
         end = datetime.fromisoformat(item['end_time'])
 
@@ -157,7 +168,7 @@ def bidding_area():
 # ====== 页面布局 ======
 def main():
     st.set_page_config("在线拍卖系统", layout="centered")
-    st_autorefresh(interval=1000, key="global-refresh")
+    #st_autorefresh(interval=1000, key="global-refresh")
 
     if "username" not in st.session_state:
         login()
