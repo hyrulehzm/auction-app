@@ -60,20 +60,19 @@ def add_item():
     end_time = st.time_input("竞拍截止时间", value=(datetime.now() + timedelta(hours=1)).time())
     image = st.file_uploader("上传拍品图片", type=["jpg", "jpeg", "png"])
 
-    if st.button("✅ 提交拍品"):
+    if st.button("✅ 提交拍品", key="submit_item"):
         if not name.strip() or not description.strip():
             st.error("❗ 拍品名称和描述不能为空")
             return
 
-    if st.button("✅ 提交拍品"):
-        start_dt = datetime.combine(start_date, start_time).isoformat()
-        end_dt = datetime.combine(end_date, end_time).isoformat()
-        image_path = None
-        if image:
-            image_name = f"{uuid.uuid4().hex}_{image.name}"
-            image_path = os.path.join(UPLOAD_DIR, image_name)
-            with open(image_path, "wb") as f:
-                f.write(image.read())
+    start_dt = datetime.combine(start_date, start_time).isoformat()
+    end_dt = datetime.combine(end_date, end_time).isoformat()
+    image_path = None
+    if image:
+        image_name = f"{uuid.uuid4().hex}_{image.name}"
+        image_path = os.path.join(UPLOAD_DIR, image_name)
+        with open(image_path, "wb") as f:
+            f.write(image.read())
 
         new_item = {
             "id": str(uuid.uuid4()),
